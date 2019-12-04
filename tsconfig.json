@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "outDir": "./build/",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "target": "es6",
+    "lib": ["es5", "dom", "es2015", "es2016", "esnext.asynciterable"]
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules",
+    "build",
+    "**/*.spec.ts"]
+}
