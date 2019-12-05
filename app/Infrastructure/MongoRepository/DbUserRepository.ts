@@ -9,10 +9,10 @@ class DbUserRepository implements UserRepository {
      * @param {User} user
      * @return Promise<boolean>
      */
-    async add(user: User): Promise<boolean> {
+    async add(user: User): Promise<User | boolean> {
         try {
-            await UserModel.create(user.toStoreObject());
-            return true
+            const userObj = await UserModel.create(user.toStoreObject());
+            return User.createFromObject(userObj);
         } catch {
             throw new DbOperationFailureException();
         }
@@ -21,19 +21,15 @@ class DbUserRepository implements UserRepository {
     /**
      * Find User by Email Id and Password from database
      * @param {string} email
-     * @param {string} password
      * @return {User}
      */
-    async findByEmailAndPass(email: string, password: string): Promise<User> {
+    async findByEmail(email: string): Promise<User> {
         try {
-            const userObj = await UserModel.find({
-                where: {
-                    email,
-                    password
-                }
-            });
-            return User.createFromObject(userObj);
-        } catch {
+            const userObj = await UserModel.findOne({email});
+            const user = User.createFromObject(userObj);
+            user.setPassword(userObj.password);
+            return user;
+        } catch (e) {
             throw new DbOperationFailureException();
         }
     }

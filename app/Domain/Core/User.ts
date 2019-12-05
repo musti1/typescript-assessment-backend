@@ -1,4 +1,4 @@
-import uuid from 'uuid/v1';
+const uuid = require('uuid/v1');
 
 class User {
     userId: string;
@@ -35,6 +35,7 @@ class User {
     }
 
     static createFromDetails(firstName, lastName, email): User {
+
         return new User(
             uuid(),
             firstName,

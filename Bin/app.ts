@@ -8,6 +8,7 @@ import cors = require('cors');
 import passport = require("passport");
 
 import WOWApioutes from "../Http/Routes/WOWApi.routes";
+import UserApiRoutes from "../Http/Routes/UserApi.routes";
 require('../app/Infrastructure/DbConnections/mongo');
 // Create Express server
 const app = express();
@@ -30,6 +31,7 @@ app.use(passport.session());
 
 app.use(cors());
 app.use('/wow', WOWApioutes);
+app.use('/user', UserApiRoutes);
 app.use(
     express.static(path.join(__dirname, "public"), { maxAge: 31557600000 })
 );

@@ -6,7 +6,7 @@ interface UserRepository {
      * @param {User} user
      * @return Promise<boolean>
      */
-    add(user: User): Promise<boolean>;
+    add(user: User): Promise<User | boolean>;
 
     /**
      * Find User by User Id
@@ -18,10 +18,9 @@ interface UserRepository {
     /**
      * Find User by Email Id and Password
      * @param {string} email
-     * @param {string} password
      * @return {User}
      */
-    findByEmailAndPass(email: string, password: string): Promise<User>;
+    findByEmail(email: string): Promise<User>;
 
     /**
      * Update User

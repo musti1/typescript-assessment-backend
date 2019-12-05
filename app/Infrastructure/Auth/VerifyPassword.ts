@@ -10,7 +10,7 @@ class VerifyPassword {
      */
     static async generatePassword(password: string) {
         const salt = await bcrypt.genSaltSync(10);
-        return await bcrypt.hash(password, salt);
+        return bcrypt.hash(password, salt);
     }
 
     /**
@@ -20,7 +20,7 @@ class VerifyPassword {
      * @return Promise<boolean>
      */
     static async verifyPassword(password: string, hash: string) {
-        return await bcrypt.compare(password, hash);
+        return bcrypt.compare(password, hash);
     }
 }
 
