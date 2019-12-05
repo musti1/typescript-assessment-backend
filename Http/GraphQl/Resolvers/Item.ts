@@ -21,20 +21,25 @@ class ItemResolver {
         return await ItemService.getComments(itemId);
     }
 
-    @Query(() => String)
+    @Query(() => ItemCommentType)
     async addItemComment(
         @Arg("itemId") itemId: number,
         @Arg("userId") userId: string,
         @Arg("comment")comment: string) {
+        console.log(itemId, userId, comment)
         return await ItemService.newComment(itemId, userId, comment);
     }
 
-    @Query(() => String)
-    async editItemComment(@Arg("commentId") commentId: string) {
-        return await ItemService.editComment(commentId);
+    @Query(() => ItemCommentType)
+    async editItemComment(
+        @Arg("commentId") commentId: string,
+        @Arg('userId') userId: string,
+        @Arg('itemId') itemId: number,
+        @Arg('comment') comment: string) {
+        return await ItemService.editComment({commentId, userId, itemId, comment});
     }
 
-    @Query(() => String)
+    @Query(() => Boolean)
     async deleteItemComment(@Arg("commentId") commentId: string) {
         return await ItemService.removeComment(commentId);
     }

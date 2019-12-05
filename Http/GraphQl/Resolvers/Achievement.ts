@@ -16,27 +16,32 @@ class AchievementResolver {
         return await AchievementService.getAchievement(achievementId);
     }
 
-    @Query( () => [AchievementCommentType])
-    async getAchievementComments(@Arg("achievementId") achievementId: number){
+    @Query(() => [AchievementCommentType])
+    async getAchievementComments(@Arg("achievementId") achievementId: number) {
         return await AchievementService.getComments(achievementId);
     }
 
-    @Query(() => String)
+    @Query(() => AchievementCommentType)
     async addAchievementComment(
         @Arg("achievementId") achievementId: number,
         @Arg("userId") userId: string,
         @Arg("comment")comment: string
-    ){
+    ) {
         return await AchievementService.newComment(achievementId, userId, comment);
     }
 
-    @Query(() => String)
-    async editAchievementComment(@Arg("commentId") commentId: string){
-        return await AchievementService.editComment(commentId);
+    @Query(() => AchievementCommentType)
+    async editAchievementComment(
+        @Arg("commentId") commentId: string,
+        @Arg('userId') userId: string,
+        @Arg('achievementId') achievementId: number,
+        @Arg('comment') comment: string
+    ) {
+        return await AchievementService.editComment({commentId, userId, achievementId, comment});
     }
 
-    @Query(() => String)
-    async deleteAchievementComment(@Arg("commentId") commentId: string){
+    @Query(() => Boolean)
+    async deleteAchievementComment(@Arg("commentId") commentId: string) {
         return await AchievementService.removeComment(commentId);
     }
 }

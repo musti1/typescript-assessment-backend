@@ -21,7 +21,7 @@ interface ItemCommentRepository {
      * @param {ItemComment} itemComment
      * @return Promise<ItemComment>
      */
-    updateComment(itemComment: ItemComment): Promise<ItemComment>;
+    updateComment(itemComment: ItemComment): Promise<ItemComment | boolean>;
 
     /**
      *

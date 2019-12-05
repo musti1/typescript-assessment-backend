@@ -11,9 +11,9 @@ class DbAchievementCommentRepository implements AchievementCommentRepository {
         }
     }
 
-    async getAllAchievementComment(itemId: string): Promise<AchievementComment[]> {
+    async getAllAchievementComment(achievementId: string): Promise<AchievementComment[]> {
         try {
-            const achievementsCommentObj = await AchievementCommentModel.find({itemId});
+            const achievementsCommentObj = await AchievementCommentModel.find({achievementId});
             return achievementsCommentObj.map(achievementCommentObj => {
                 return AchievementComment.createFromObject(achievementCommentObj);
             })
@@ -22,20 +22,18 @@ class DbAchievementCommentRepository implements AchievementCommentRepository {
         }
     }
 
-    async updateComment(itemComment: AchievementComment) {
+    async updateComment(achievementComment: AchievementComment): Promise<AchievementComment | boolean> {
         try {
-            const achievementsCommentObj = await AchievementCommentModel.update({id: itemComment.id}, itemComment);
-            return achievementsCommentObj.map(achievementCommentObj => {
-                return AchievementComment.createFromObject(achievementCommentObj);
-            })
+            const achievementCommentObj = await AchievementCommentModel.findOneAndUpdate({commentId: achievementComment.commentId}, achievementComment, {new: true});
+            return AchievementComment.createFromObject(achievementCommentObj)
         } catch (e) {
-            return []
+            return false
         }
     }
 
-    async deleteComment(achievementCommentId) {
+    async deleteComment(commentId) {
         try {
-            await AchievementCommentModel.destroy({id: achievementCommentId});
+            await AchievementCommentModel.deleteOne({ commentId });
             return true;
         } catch (e) {
             return false;

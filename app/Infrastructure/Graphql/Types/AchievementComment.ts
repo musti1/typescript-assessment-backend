@@ -3,16 +3,16 @@ import {Field, ObjectType} from "type-graphql";
 
 @ObjectType()
 class AchievementCommentType {
-    @Field()
-    id?: string;
+    @Field({nullable: true})
+    commentId?: string;
 
-    @Field()
+    @Field({nullable: true})
     achievementId?: number;
 
-    @Field()
+    @Field({nullable: true})
     userId?: string;
 
-    @Field()
+    @Field({nullable: true})
     comment?: string;
 }
 

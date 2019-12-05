@@ -3,7 +3,7 @@ import { prop, Typegoose } from 'typegoose';
 class AchievementComment extends Typegoose {
 
     @prop()
-    id?: string;
+    commentId?: string;
 
     @prop()
     achievementId?: number;

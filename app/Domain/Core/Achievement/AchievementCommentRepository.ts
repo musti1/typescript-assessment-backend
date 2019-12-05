@@ -21,7 +21,7 @@ interface AchievementCommentRepository {
      * @param {AchievementComment} achievementComment
      * @return Promise<AchievementComment>
      */
-    updateComment(achievementComment: AchievementComment): Promise<AchievementComment>;
+    updateComment(achievementComment: AchievementComment): Promise<AchievementComment | boolean>;
 
     /**
      *

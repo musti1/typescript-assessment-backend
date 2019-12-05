@@ -22,22 +22,21 @@ class DbItemCommentRepository implements ItemCommentRepository {
         }
     }
 
-    async updateComment(itemComment: ItemComment) {
+    async updateComment(itemComment: ItemComment): Promise<ItemComment | boolean> {
         try {
-            const itemCommentsObj = await ItemCommentModel.update({id: itemComment.id}, itemComment);
-            return itemCommentsObj.map(itemCommentObj => {
-                return ItemComment.createFromObject(itemCommentObj);
-            })
+            const itemCommentObj = await ItemCommentModel.findOneAndUpdate({commentId: itemComment.commentId}, itemComment, { new: true });
+            return ItemComment.createFromObject(itemCommentObj);
         }catch (e) {
-            return []
+            return false
         }
     }
 
-    async deleteComment(itemCommentId) {
+    async deleteComment(commentId) {
         try{
-            await ItemCommentModel.destroy({id: itemCommentId});
+            await ItemCommentModel.deleteOne({ commentId });
             return true;
         }catch (e) {
+            console.log(e)
             return false;
         }
     }

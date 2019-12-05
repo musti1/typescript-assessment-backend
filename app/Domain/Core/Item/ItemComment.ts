@@ -2,18 +2,18 @@ const uuid = require('uuid/v1');
 
 class ItemComment {
 
-    id: string;
+    commentId: string;
     itemId: number;
     userId: string;
     comment: string;
 
     constructor(
-        id: string,
+        commentId: string,
         itemId: number,
         userId: string,
         comment: string
     ) {
-        this.id = id;
+        this.commentId = commentId;
         this.itemId = itemId;
         this.userId = userId;
         this.comment = comment;
@@ -21,7 +21,7 @@ class ItemComment {
 
     toStoreObject() {
         return {
-            id: this.id,
+            commentId: this.commentId,
             itemId: this.itemId,
             userId: this.userId,
             comment: this.comment,
@@ -42,7 +42,7 @@ class ItemComment {
 
     static createFromObject(obj: any): ItemComment {
         return new ItemComment(
-            obj.id,
+            obj.commentId,
             obj.itemId,
             obj.userId,
             obj.comment
