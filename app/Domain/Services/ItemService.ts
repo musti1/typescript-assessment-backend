@@ -29,7 +29,6 @@ class ItemService {
     static async newComment(itemId, userId, comment){
         try {
             const itemComment = ItemComment.createFromDetails(itemId, userId, comment);
-            console.log(itemComment)
             return await DbItemCommentRepository.add(itemComment);
         }catch (e) {
             return false;
@@ -38,10 +37,7 @@ class ItemService {
 
     static async editComment(itemCommentObj){
         try {
-            const itemComment = ItemComment.createFromObject(itemCommentObj);
-            const updated = await DbItemCommentRepository.updateComment(itemComment);
-            console.log(updated)
-            return updated
+            return await DbItemCommentRepository.updateComment(itemCommentObj);
         }catch (e) {
             return false;
         }

@@ -3,9 +3,10 @@ import AchievementCommentRepository from "../../Domain/Core/Achievement/Achievem
 import AchievementComment from "../../Domain/Core/Achievement/AchievementComment";
 
 class DbAchievementCommentRepository implements AchievementCommentRepository {
-    async add(achievementComment: AchievementComment): Promise<AchievementComment | boolean> {
+    async add(achievementComment: AchievementComment): Promise<boolean> {
         try {
-            return await AchievementCommentModel.create(achievementComment);
+            await AchievementCommentModel.create(achievementComment);
+            return true;
         } catch (e) {
             return false
         }
@@ -13,27 +14,46 @@ class DbAchievementCommentRepository implements AchievementCommentRepository {
 
     async getAllAchievementComment(achievementId: string): Promise<AchievementComment[]> {
         try {
-            const achievementsCommentObj = await AchievementCommentModel.find({achievementId});
+            const achievementsCommentObj = await AchievementCommentModel.aggregate([
+                {
+                    $match: {
+                        achievementId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: 'userId',
+                        as: 'userDetail'
+                    }
+                },
+                {
+                    $unwind: "$userDetail"
+                }
+            ]);
             return achievementsCommentObj.map(achievementCommentObj => {
-                return AchievementComment.createFromObject(achievementCommentObj);
+                const achievementComment = AchievementComment.createFromObject(achievementCommentObj);
+                achievementComment.setUserDetail(achievementCommentObj.userDetail);
+                return achievementComment;
             })
         } catch (e) {
             return []
         }
     }
 
-    async updateComment(achievementComment: AchievementComment): Promise<AchievementComment | boolean> {
+    async updateComment(achievementComment: AchievementComment): Promise<boolean> {
         try {
-            const achievementCommentObj = await AchievementCommentModel.findOneAndUpdate({commentId: achievementComment.commentId}, achievementComment, {new: true});
-            return AchievementComment.createFromObject(achievementCommentObj)
+            await AchievementCommentModel.findOneAndUpdate({commentId: achievementComment.commentId}, achievementComment, {new: true});
+            return true;
         } catch (e) {
             return false
         }
     }
 
-    async deleteComment(commentId) {
+    async deleteComment(commentId): Promise<boolean> {
         try {
-            await AchievementCommentModel.deleteOne({ commentId });
+            await AchievementCommentModel.deleteOne({commentId});
             return true;
         } catch (e) {
             return false;

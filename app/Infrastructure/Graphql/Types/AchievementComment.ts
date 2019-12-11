@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import {Field, ObjectType} from "type-graphql";
+import User from "./User";
 
 @ObjectType()
 class AchievementCommentType {
@@ -14,6 +15,9 @@ class AchievementCommentType {
 
     @Field({nullable: true})
     comment?: string;
+
+    @Field(type => User, { nullable: true })
+    userDetail?: User
 }
 
 export default AchievementCommentType;

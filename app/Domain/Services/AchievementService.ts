@@ -38,8 +38,7 @@ class AchievementService {
 
     static async editComment(achievementCommentObj) {
         try {
-            const achievementComment = AchievementComment.createFromObject(achievementCommentObj);
-            return await DbAchievementCommentRepository.updateComment(achievementComment);
+            return await DbAchievementCommentRepository.updateComment(achievementCommentObj);
         } catch (e) {
             return false;
         }

@@ -1,4 +1,4 @@
-import {Arg, Query, Resolver} from "type-graphql";
+import {Arg, Mutation, Query, Resolver} from "type-graphql";
 import AchievementType from "../../../app/Infrastructure/Graphql/Types/Achievement";
 import AchievementService from "../../../app/Domain/Services/AchievementService";
 import AchievementCommentType from "../../../app/Infrastructure/Graphql/Types/AchievementComment";
@@ -16,12 +16,12 @@ class AchievementResolver {
         return await AchievementService.getAchievement(achievementId);
     }
 
-    @Query(() => [AchievementCommentType])
+    @Mutation(() => [AchievementCommentType])
     async getAchievementComments(@Arg("achievementId") achievementId: number) {
         return await AchievementService.getComments(achievementId);
     }
 
-    @Query(() => AchievementCommentType)
+    @Mutation(() => Boolean)
     async addAchievementComment(
         @Arg("achievementId") achievementId: number,
         @Arg("userId") userId: string,
@@ -30,17 +30,15 @@ class AchievementResolver {
         return await AchievementService.newComment(achievementId, userId, comment);
     }
 
-    @Query(() => AchievementCommentType)
+    @Mutation(() => Boolean)
     async editAchievementComment(
         @Arg("commentId") commentId: string,
-        @Arg('userId') userId: string,
-        @Arg('achievementId') achievementId: number,
         @Arg('comment') comment: string
     ) {
-        return await AchievementService.editComment({commentId, userId, achievementId, comment});
+        return await AchievementService.editComment({commentId, comment});
     }
 
-    @Query(() => Boolean)
+    @Mutation(() => Boolean)
     async deleteAchievementComment(@Arg("commentId") commentId: string) {
         return await AchievementService.removeComment(commentId);
     }

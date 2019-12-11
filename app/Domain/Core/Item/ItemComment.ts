@@ -1,4 +1,5 @@
 const uuid = require('uuid/v1');
+import User from "../User";
 
 class ItemComment {
 
@@ -6,6 +7,7 @@ class ItemComment {
     itemId: number;
     userId: string;
     comment: string;
+    userDetail: User;
 
     constructor(
         commentId: string,
@@ -26,6 +28,10 @@ class ItemComment {
             userId: this.userId,
             comment: this.comment,
         }
+    }
+
+    setUserDetail(userObj) {
+        this.userDetail = new User(userObj.userId, userObj.firstName, userObj.lastName, userObj.email);
     }
 
     static createFromDetails(

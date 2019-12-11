@@ -3,9 +3,10 @@ import ItemCommentRepository from "../../Domain/Core/Item/ItemCommentRepository"
 import ItemComment from "../../Domain/Core/Item/ItemComment";
 
 class DbItemCommentRepository implements ItemCommentRepository {
-    async add(itemComment: ItemComment): Promise<ItemComment | boolean> {
+    async add(itemComment: ItemComment): Promise<boolean> {
         try {
-            return await ItemCommentModel.create(itemComment);
+            await ItemCommentModel.create(itemComment);
+            return true;
         }catch (e) {
             return false
         }
@@ -13,19 +14,38 @@ class DbItemCommentRepository implements ItemCommentRepository {
 
     async getAllItemComment(itemId: string): Promise<ItemComment[]> {
         try {
-            const itemCommentsObj = await ItemCommentModel.find({itemId});
+            const itemCommentsObj = await ItemCommentModel.aggregate([
+                {
+                    $match: {
+                        itemId
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: 'userId',
+                        as: 'userDetail'
+                    }
+                },
+                {
+                    $unwind: "$userDetail"
+                }
+            ]);
             return itemCommentsObj.map(itemCommentObj => {
-                return ItemComment.createFromObject(itemCommentObj);
-            })
+                const itemComment = ItemComment.createFromObject(itemCommentObj);
+                itemComment.setUserDetail(itemCommentObj.userDetail);
+                return itemComment;
+            });
         }catch (e) {
             return []
         }
     }
 
-    async updateComment(itemComment: ItemComment): Promise<ItemComment | boolean> {
+    async updateComment(itemComment: ItemComment): Promise<boolean> {
         try {
-            const itemCommentObj = await ItemCommentModel.findOneAndUpdate({commentId: itemComment.commentId}, itemComment, { new: true });
-            return ItemComment.createFromObject(itemCommentObj);
+            await ItemCommentModel.findOneAndUpdate({commentId: itemComment.commentId}, itemComment, { new: true });
+            return true
         }catch (e) {
             return false
         }
@@ -36,7 +56,6 @@ class DbItemCommentRepository implements ItemCommentRepository {
             await ItemCommentModel.deleteOne({ commentId });
             return true;
         }catch (e) {
-            console.log(e)
             return false;
         }
     }
